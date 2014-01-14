@@ -3,7 +3,7 @@ TinyStyle
 
 A tiny (less than 1KB) JavaScript library for creating and manipulating stylesheets, with a similar API to jQuery. TinyStyle injects a &lt;style&gt; tag into the head of the page and generates CSS to fill it. This means you don't have to modify page elements directly, and the rules you define apply to new elements inserted into the page later. Performance is optimised on modern browsers using [requestAnimationFrame](https://developer.mozilla.org/en/docs/Web/API/window.requestAnimationFrame) to avoid excessive repainting of the page.
 
-TinyStyle can be installed by downloading the [minified JS here](https://raw2.github.com/DavidTimms/tiny-style/master/tiny-style.min.js), or running `npm install tiny-style` if NPM is your cup of tea. It can then be included in a normal &lt;script&gt; tag or required using [browserify](http://browserify.org/).
+TinyStyle can be installed by downloading the [minified JS here](https://raw2.github.com/DavidTimms/tiny-style/master/tiny-style.min.js), or running npm install tiny-style if NPM is your cup of tea. It can then be included in a normal &lt;script&gt; tag or required using [browserify](http://browserify.org/).
 
 Start by creating a stylesheet:
 
@@ -33,12 +33,32 @@ Calling .css() with just a rule name returns its value:
     ts("#banner").css({padding: "30px"});
     ts("#banner").css("padding"); // returns "30px"
 
+After running the examples above, the stylesheet will contain the following CSS:
+
+    body {
+        width: 400px;
+    }
+    p {
+        color: red;
+        font-weight: bold;
+        border: 1px solid black;
+    }
+    .active {
+        font-size: 18px;
+    }
+    a:link {
+        text-decoration: none;
+    }
+    #banner {
+        padding: 30px;
+    }
+
 The stylesheet element which TinyStyle created can be accessed direction using the stylesheet property:
 
-    ts.stylesheet;
+    ts.stylesheet; // returns <style> element
 
 You can call remove() to destroy the stylesheet.
-
+    
     ts.remove();
 
 That's it!

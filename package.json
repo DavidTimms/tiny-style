@@ -1,6 +1,6 @@
 {
   "name": "tiny-style",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A tiny library for creating and manipulating head stylesheets with a similar API to jQuery",
   "files": ["tiny-style.js", "tiny-style.min.js", "README.md"],
   "main": "tiny-style.min.js",
