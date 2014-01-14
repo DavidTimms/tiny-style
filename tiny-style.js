@@ -1,13 +1,14 @@
 var TinyStyle = (function () {
-	function render (sheet, ruleset) {
+	function render (sheet, ruleset, sel, renderCache) {
+		var selStr = sel + " {\n";
+		var selRules = ruleset[sel];
+		for (var rule in selRules) if (selRules[rule])
+			selStr += "	" + rule + ": " + selRules[rule] + ";\n";
+		selStr += "}\n";
+		renderCache[sel] = selStr;
 		var css = "\n";
-		for (var sel in ruleset) {
-			css += sel + " {\n";
-			selRules = ruleset[sel];
-			for (var rule in selRules) if (selRules[rule])
-				css += "	" + rule + ": " + selRules[rule] + ";\n";
-			css += "}\n";
-		}
+		for (var s in renderCache)
+			css += renderCache[s];
 		sheet.innerHTML = css;
 	}
 	function dashify (s) {
@@ -17,6 +18,7 @@ var TinyStyle = (function () {
 	}
 	function TinyStyle () {
 		ruleset = {};
+		renderCache = {};
 		var sheet = document.createElement("style");
 		sheet.type = "text/css";
 		document.head.appendChild(sheet);
@@ -33,7 +35,7 @@ var TinyStyle = (function () {
 					ruleset[sel] = selRules = ruleset[sel] || {};
 					for (var rule in rules)
 						selRules[dashify(rule)] = rules[rule];
-					render(sheet, ruleset);
+					render(sheet, ruleset, sel, renderCache);
 				}
 			};
 		};
