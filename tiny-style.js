@@ -1,6 +1,9 @@
 var TinyStyle = (function () {
 	var raf = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
-		window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
+		window.webkitRequestAnimationFrame || window.msRequestAnimationFrame || 
+		function (func) {
+			func();
+		};
 	function dashify (s) {
 		return s.replace(/([A-Z])/g, function(c){ 
 			return "-" + c.toLowerCase();

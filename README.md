@@ -1,7 +1,7 @@
 TinyStyle
 ==========
 
-A tiny (less than 1KB) JavaScript library for creating and manipulating stylesheets, with a similar API to jQuery. TinyStyle injects a &lt;style&gt; tag into the head of the page and generates CSS to fill it. This means you don't have to modify page elements directly, and the rules you define apply to new elements inserted into the page later.
+A tiny (less than 1KB) JavaScript library for creating and manipulating stylesheets, with a similar API to jQuery. TinyStyle injects a &lt;style&gt; tag into the head of the page and generates CSS to fill it. This means you don't have to modify page elements directly, and the rules you define apply to new elements inserted into the page later. Performance is optimised on modern browsers using [requestAnimationFrame](https://developer.mozilla.org/en/docs/Web/API/window.requestAnimationFrame) to avoid excessive repainting of the page.
 
 TinyStyle can be included in a normal &lt;script&gt; tag or required using [browserify](http://browserify.org/).
 
