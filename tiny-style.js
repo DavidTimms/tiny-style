@@ -17,7 +17,7 @@ var TinyStyle = (function () {
 	}
 	function TinyStyle () {
 		ruleset = {};
-		sheet = document.createElement("style");
+		var sheet = document.createElement("style");
 		sheet.type = "text/css";
 		document.head.appendChild(sheet);
 		function select (sel) {
@@ -38,6 +38,11 @@ var TinyStyle = (function () {
 			};
 		};
 		select.stylesheet = sheet;
+		select.remove = function () {
+			try {
+				document.head.removeChild(sheet);
+			} catch (e) {}
+		};
 		return select;
 	}
 	return TinyStyle;

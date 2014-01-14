@@ -36,8 +36,8 @@ describe 'Adding and Removing Stylesheets', ->
 			assert.equal(ts1.stylesheet.nodeName, "STYLE")
 		it 'Should allow removing stylesheets', ->
 			before = countStylesheets()
-			removeNode(ts1.stylesheet)
-			removeNode(ts2.stylesheet)
+			ts1.remove()
+			ts2.remove()
 			diff = countStylesheets() - before
 			assert.equal(diff, -2)
 
@@ -49,7 +49,7 @@ describe 'Adding and Removing Rules', ->
 	beforeEach ->
 		ts = TinyStyle()
 	afterEach ->
-		removeNode(ts.stylesheet)
+		ts.remove()
 	after ->
 		removeNode(para)
 
@@ -110,7 +110,7 @@ describe 'Adding and Removing Rules', ->
 		it 'Removing stylesheet should stop rules', ->
 			ts("body").css({width: "1000px"})
 			assert.equal(getComputedStyle(document.body).width, "1000px")
-			removeNode(ts.stylesheet)
+			ts.remove()
 			assert.notEqual(getComputedStyle(document.body).width, "1000px")
 
 		it 'Setting to null should stop rules', ->

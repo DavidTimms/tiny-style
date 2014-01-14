@@ -59,8 +59,8 @@
       return it('Should allow removing stylesheets', function() {
         var before, diff;
         before = countStylesheets();
-        removeNode(ts1.stylesheet);
-        removeNode(ts2.stylesheet);
+        ts1.remove();
+        ts2.remove();
         diff = countStylesheets() - before;
         return assert.equal(diff, -2);
       });
@@ -77,7 +77,7 @@
       return ts = TinyStyle();
     });
     afterEach(function() {
-      return removeNode(ts.stylesheet);
+      return ts.remove();
     });
     after(function() {
       return removeNode(para);
@@ -137,7 +137,7 @@
           width: "1000px"
         });
         assert.equal(getComputedStyle(document.body).width, "1000px");
-        removeNode(ts.stylesheet);
+        ts.remove();
         return assert.notEqual(getComputedStyle(document.body).width, "1000px");
       });
       return it('Setting to null should stop rules', function() {
