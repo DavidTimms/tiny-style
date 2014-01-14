@@ -1,27 +1,29 @@
 var TinyStyle = (function () {
-	function render (sheet, ruleset, sel, renderCache) {
-		var selStr = sel + " {\n";
-		var selRules = ruleset[sel];
-		for (var rule in selRules) if (selRules[rule])
-			selStr += "	" + rule + ": " + selRules[rule] + ";\n";
-		selStr += "}\n";
-		renderCache[sel] = selStr;
-		var css = "\n";
-		for (var s in renderCache)
-			css += renderCache[s];
-		sheet.innerHTML = css;
-	}
+	var raf = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
+		window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
 	function dashify (s) {
 		return s.replace(/([A-Z])/g, function(c){ 
 			return "-" + c.toLowerCase();
 		});
 	}
 	function TinyStyle () {
-		ruleset = {};
-		renderCache = {};
+		var ruleset = {};
 		var sheet = document.createElement("style");
 		sheet.type = "text/css";
 		document.head.appendChild(sheet);
+		function render () {
+			waiting = false;
+			var css = "\n";
+			for (var sel in ruleset) {
+				css += sel + " {\n";
+				selRules = ruleset[sel];
+				for (var rule in selRules) if (selRules[rule])
+				css += "  " + rule + ": " + selRules[rule] + ";\n";
+				css += "}\n";
+			}
+			sheet.innerHTML = css;
+		}
+		var waiting;
 		function select (sel) {
 			return {
 				css: function (rules, val) {
@@ -35,10 +37,13 @@ var TinyStyle = (function () {
 					ruleset[sel] = selRules = ruleset[sel] || {};
 					for (var rule in rules)
 						selRules[dashify(rule)] = rules[rule];
-					render(sheet, ruleset, sel, renderCache);
+					if (!waiting) {
+						raf(render);
+						waiting = true;
+					}
 				}
 			};
-		};
+		}
 		select.stylesheet = sheet;
 		select.remove = function () {
 			try {

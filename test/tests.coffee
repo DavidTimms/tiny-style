@@ -52,48 +52,58 @@ describe 'Adding and Removing Rules', ->
 		ts.remove()
 	after ->
 		removeNode(para)
+	later = (callback) ->
+		setTimeout(callback, 45)
 
 	describe 'Adding and retrieving rules', ->
-		it 'Adding single rules using object syntax', ->
+		it 'Adding single rules using object syntax', (done) ->
 			# Add rule
 			ts("body").css({color: "blue"})
-			# Check internally
-			assert.equal(ts("body").css("color"), "blue")
-			# Check in the DOM
-			assert.equal(getComputedStyle(document.body).color, "rgb(0, 0, 255)")
-		it 'Adding multiple rules using object syntax', ->
+			later ->
+				# Check internally
+				assert.equal(ts("body").css("color"), "blue")
+				# Check in the DOM
+				assert.equal(getComputedStyle(document.body).color, "rgb(0, 0, 255)")
+				done()
+		it 'Adding multiple rules using object syntax', (done) ->
 			# Add rules
 			ts("p").css
 				color: "blue"
 				"font-weight": "600"
 				"font-size": "24px"
-			# Check internally
-			assert.equal(ts("p").css("color"), "blue")
-			assert.equal(ts("p").css("font-weight"), "600")
-			assert.equal(ts("p").css("font-size"), "24px")
-			# Check in the DOM
-			assert.equal(getComputedStyle(para).color, "rgb(0, 0, 255)")
-			assert.equal(getComputedStyle(para).fontWeight, "600")
-			assert.equal(getComputedStyle(para).fontSize, "24px")
+			later ->
+				# Check internally
+				assert.equal(ts("p").css("color"), "blue")
+				assert.equal(ts("p").css("font-weight"), "600")
+				assert.equal(ts("p").css("font-size"), "24px")
+				# Check in the DOM
+				assert.equal(getComputedStyle(para).color, "rgb(0, 0, 255)")
+				assert.equal(getComputedStyle(para).fontWeight, "600")
+				assert.equal(getComputedStyle(para).fontSize, "24px")
+				done()
 
-		it 'Adding single rules using string syntax', ->
+		it 'Adding single rules using string syntax', (done) ->
 			# Add rule
 			ts(".para").css("display", "none")
-			# Check internally
-			assert.equal(ts(".para").css("display"), "none")
-			# Check in the DOM
-			assert.equal(getComputedStyle(para).display, "none")
+			later ->
+				# Check internally
+				assert.equal(ts(".para").css("display"), "none")
+				# Check in the DOM
+				assert.equal(getComputedStyle(para).display, "none")
+				done()
 
-		it 'Rules apply to nodes added after rule added', ->
+		it 'Rules apply to nodes added after rule added', (done) ->
 			# Add rule
 			ts(".para").css("position", "absolute")
-			# Add new paragraph
-			newPara = document.createElement("p")
-			newPara.className = "para"
-			document.body.appendChild(newPara)
-			# Check that the rule applies to the new paragraph
-			assert.equal(getComputedStyle(newPara).position, "absolute")
-			removeNode(newPara)
+			later ->
+				# Add new paragraph
+				newPara = document.createElement("p")
+				newPara.className = "para"
+				document.body.appendChild(newPara)
+				# Check that the rule applies to the new paragraph
+				assert.equal(getComputedStyle(newPara).position, "absolute")
+				removeNode(newPara)
+				done()
 
 		it 'CamelCase and dash syntax are mixable', ->
 			ts("div").css("font-family", "sans-serif")
@@ -107,14 +117,19 @@ describe 'Adding and Removing Rules', ->
 			assert.equal(ts("span").css("font-family"), undefined)
 
 	describe 'Removing rules', ->
-		it 'Removing stylesheet should stop rules', ->
+		it 'Removing stylesheet should stop rules', (done) ->
 			ts("body").css({width: "1000px"})
-			assert.equal(getComputedStyle(document.body).width, "1000px")
-			ts.remove()
-			assert.notEqual(getComputedStyle(document.body).width, "1000px")
+			later ->
+				assert.equal(getComputedStyle(document.body).width, "1000px")
+				ts.remove()
+				assert.notEqual(getComputedStyle(document.body).width, "1000px")
+				done()
 
-		it 'Setting to null should stop rules', ->
+		it 'Setting to null should stop rules', (done) ->
 			ts(".para").css({marginTop: "50px"})
-			assert.equal(getComputedStyle(para).marginTop, "50px")
-			ts(".para").css({marginTop: null})
-			assert.notEqual(getComputedStyle(para).marginTop, "50px")
+			later ->
+				assert.equal(getComputedStyle(para).marginTop, "50px")
+				ts(".para").css({marginTop: null})
+				later ->
+					assert.notEqual(getComputedStyle(para).marginTop, "50px")
+					done()

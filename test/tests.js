@@ -68,7 +68,7 @@
   });
 
   describe('Adding and Removing Rules', function() {
-    var para, ts;
+    var later, para, ts;
     ts = null;
     para = document.createElement("p");
     para.className = "para";
@@ -82,40 +82,55 @@
     after(function() {
       return removeNode(para);
     });
+    later = function(callback) {
+      return setTimeout(callback, 45);
+    };
     describe('Adding and retrieving rules', function() {
-      it('Adding single rules using object syntax', function() {
+      it('Adding single rules using object syntax', function(done) {
         ts("body").css({
           color: "blue"
         });
-        assert.equal(ts("body").css("color"), "blue");
-        return assert.equal(getComputedStyle(document.body).color, "rgb(0, 0, 255)");
+        return later(function() {
+          assert.equal(ts("body").css("color"), "blue");
+          assert.equal(getComputedStyle(document.body).color, "rgb(0, 0, 255)");
+          return done();
+        });
       });
-      it('Adding multiple rules using object syntax', function() {
+      it('Adding multiple rules using object syntax', function(done) {
         ts("p").css({
           color: "blue",
           "font-weight": "600",
           "font-size": "24px"
         });
-        assert.equal(ts("p").css("color"), "blue");
-        assert.equal(ts("p").css("font-weight"), "600");
-        assert.equal(ts("p").css("font-size"), "24px");
-        assert.equal(getComputedStyle(para).color, "rgb(0, 0, 255)");
-        assert.equal(getComputedStyle(para).fontWeight, "600");
-        return assert.equal(getComputedStyle(para).fontSize, "24px");
+        return later(function() {
+          assert.equal(ts("p").css("color"), "blue");
+          assert.equal(ts("p").css("font-weight"), "600");
+          assert.equal(ts("p").css("font-size"), "24px");
+          assert.equal(getComputedStyle(para).color, "rgb(0, 0, 255)");
+          assert.equal(getComputedStyle(para).fontWeight, "600");
+          assert.equal(getComputedStyle(para).fontSize, "24px");
+          return done();
+        });
       });
-      it('Adding single rules using string syntax', function() {
+      it('Adding single rules using string syntax', function(done) {
         ts(".para").css("display", "none");
-        assert.equal(ts(".para").css("display"), "none");
-        return assert.equal(getComputedStyle(para).display, "none");
+        return later(function() {
+          assert.equal(ts(".para").css("display"), "none");
+          assert.equal(getComputedStyle(para).display, "none");
+          return done();
+        });
       });
-      it('Rules apply to nodes added after rule added', function() {
-        var newPara;
+      it('Rules apply to nodes added after rule added', function(done) {
         ts(".para").css("position", "absolute");
-        newPara = document.createElement("p");
-        newPara.className = "para";
-        document.body.appendChild(newPara);
-        assert.equal(getComputedStyle(newPara).position, "absolute");
-        return removeNode(newPara);
+        return later(function() {
+          var newPara;
+          newPara = document.createElement("p");
+          newPara.className = "para";
+          document.body.appendChild(newPara);
+          assert.equal(getComputedStyle(newPara).position, "absolute");
+          removeNode(newPara);
+          return done();
+        });
       });
       it('CamelCase and dash syntax are mixable', function() {
         ts("div").css("font-family", "sans-serif");
@@ -132,23 +147,31 @@
       });
     });
     return describe('Removing rules', function() {
-      it('Removing stylesheet should stop rules', function() {
+      it('Removing stylesheet should stop rules', function(done) {
         ts("body").css({
           width: "1000px"
         });
-        assert.equal(getComputedStyle(document.body).width, "1000px");
-        ts.remove();
-        return assert.notEqual(getComputedStyle(document.body).width, "1000px");
+        return later(function() {
+          assert.equal(getComputedStyle(document.body).width, "1000px");
+          ts.remove();
+          assert.notEqual(getComputedStyle(document.body).width, "1000px");
+          return done();
+        });
       });
-      return it('Setting to null should stop rules', function() {
+      return it('Setting to null should stop rules', function(done) {
         ts(".para").css({
           marginTop: "50px"
         });
-        assert.equal(getComputedStyle(para).marginTop, "50px");
-        ts(".para").css({
-          marginTop: null
+        return later(function() {
+          assert.equal(getComputedStyle(para).marginTop, "50px");
+          ts(".para").css({
+            marginTop: null
+          });
+          return later(function() {
+            assert.notEqual(getComputedStyle(para).marginTop, "50px");
+            return done();
+          });
         });
-        return assert.notEqual(getComputedStyle(para).marginTop, "50px");
       });
     });
   });
